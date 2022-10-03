@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "386971079556",
+    "project_id": "dorm-copy",
+    "storage_bucket": "dorm-copy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:386971079556:android:8538d9488167b2633283d1",
+        "android_client_info": {
+          "package_name": "com.example.dorm_copy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "386971079556-laraitas05aqagrtq8avgpn67lmocou4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfHQlNeLnePYHfq1OctYKZJNxtFXurhq4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "386971079556-laraitas05aqagrtq8avgpn67lmocou4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
