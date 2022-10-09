@@ -4,6 +4,17 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:open_file/open_file.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+launchWhatsApp() async {
+  final link = const WhatsAppUnilink(
+    phoneNumber: '+491603265882',
+    text:
+        "Hey! I just uploaded a file to the Dorm Copy App - kindly let me know when I can come by to pick it up!",
+  );
+  await launch('$link');
+}
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +53,22 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.red,
       ),
-      home: const MyHomePage(title: 'Dorm Copy 🧾'),
+      home: MyHomePage(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.local_print_shop_rounded, color: Colors.white, size: 20),
+            Text(
+              ' Dorm Copy',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -59,7 +85,7 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  final Widget title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -103,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: widget.title,
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -125,12 +151,53 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // Welcome users and explain what the app does
             const Text(
-              'Select a file you want to print.',
+              'Welcome to Dorm Copy!',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            const Text(
+              'This app allows you to upload files to the dorm copy cloud and get them printed asap.',
+              style: TextStyle(
+                fontSize: 15,
+              ),
+            ),
+            const Text(
+              'To get started, select a file that you want to print by clicking Select File button on the bottom right.',
+              style: TextStyle(
+                fontSize: 15,
+              ),
+            ),
+            const Text(
+              'You can notify the Dorm Copy Manager by clicking the Notify button below.',
+              style: TextStyle(
+                fontSize: 15,
+              ),
+            ),
+            const Text(
+              '(notification via WhatsApp)',
+              style: TextStyle(
+                fontSize: 10,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  launchWhatsApp();
+                },
+                child: const Text('Notify 📲'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.green,
+                  onPrimary: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -138,8 +205,8 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: selectFile,
         tooltip: 'Select File',
-        icon: Icon(Icons.upload_rounded),
-        label: Text('Select File'),
+        icon: const Icon(Icons.upload_rounded),
+        label: const Text('Select File'),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
