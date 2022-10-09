@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+import 'dart:async';
+import 'package:open_file/open_file.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
+    name: "dorm _copy project",
     options: const FirebaseOptions(
         apiKey: "AIzaSyCpAqVKGjxmkfA5BEv28uifRrIiIIWAtLw",
         authDomain: "dorm-copy.firebaseapp.com",
@@ -74,6 +79,18 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result != null) return;
+
+    final file = result?.files.first;
+    openFile(file);
+  }
+
+  Future openFile(PlatformFile? file) async {
+    await OpenFile.open(file?.path!);
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -119,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _incrementCounter,
+        onPressed: selectFile,
         tooltip: 'Select File',
         icon: Icon(Icons.upload_rounded),
         label: Text('Select File'),
