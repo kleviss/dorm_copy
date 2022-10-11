@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "dorm_copy",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--no-sound-null-safety"]
+    },
+    {
+      "name": "dorm_copy (profile mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "dorm_copy (release mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "Flutter (Pixel 5 API 31)",
+      "program": "lib/main.dart",
+      "deviceId": "emulator-5554",
+      "request": "launch",
+      "type": "dart"
+    }
+  ]
+}
