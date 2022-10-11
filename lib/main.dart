@@ -109,8 +109,14 @@ class _MyHomePageState extends State<MyHomePage> {
     final result = await FilePicker.platform.pickFiles();
     if (result != null) return;
 
+    // Open the single file
     final file = result?.files.first;
-    openFile(file);
+    // openFile(file);
+
+    print("Name: ${file!.name}");
+    print("Size: ${file.size}");
+    print("Extension: ${file.extension}");
+    print("Path: ${file.path}");
   }
 
   Future openFile(PlatformFile? file) async {
@@ -160,19 +166,19 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             const Text(
-              'This app allows you to upload files to the dorm copy cloud and get them printed asap.',
+              'You can use this app to print stuff asap.',
               style: TextStyle(
                 fontSize: 15,
               ),
             ),
             const Text(
-              'To get started, select a file that you want to print by clicking Select File button on the bottom right.',
+              'To get started, select a file that you want to print.',
               style: TextStyle(
                 fontSize: 15,
               ),
             ),
             const Text(
-              'You can notify the Dorm Copy Manager by clicking the Notify button below.',
+              'Then, notify/chat with the Dorm Copy Manager to schedule delivery.',
               style: TextStyle(
                 fontSize: 15,
               ),
@@ -203,7 +209,19 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: selectFile,
+        onPressed: () async {
+          final result = await FilePicker.platform.pickFiles();
+          if (result != null) return;
+
+          // Open the single file
+          final file = result?.files.first;
+          // openFile(file);
+
+          print("Name: ${file!.name}");
+          print("Size: ${file.size}");
+          print("Extension: ${file.extension}");
+          print("Path: ${file.path}");
+        },
         tooltip: 'Select File',
         icon: const Icon(Icons.upload_rounded),
         label: const Text('Select File'),
