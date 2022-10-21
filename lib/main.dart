@@ -6,9 +6,13 @@ import 'dart:async';
 import 'package:open_file/open_file.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 import 'package:url_launcher/url_launcher.dart';
+// import path provider
+import 'package:path_provider/path_provider.dart';
+
+import 'files_page.dart';
 
 launchWhatsApp() async {
-  final link = const WhatsAppUnilink(
+  const link = WhatsAppUnilink(
     phoneNumber: '+491603265882',
     text:
         "Hey! I just uploaded a file to the Dorm Copy App - kindly let me know when I can come by to pick it up!",
@@ -56,7 +60,7 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Icon(Icons.local_print_shop_rounded, color: Colors.white, size: 20),
             Text(
               ' Dorm Copy',
@@ -106,21 +110,45 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result != null) return;
+    final result = await FilePicker.platform.pickFiles(allowMultiple: true);
+    if (result == null) return;
 
     // Open the single file
     final file = result?.files.first;
     // openFile(file);
+    // await saveFilePermanently(file);
+
+    openFiles(result.files);
 
     print("Name: ${file!.name}");
     print("Size: ${file.size}");
     print("Extension: ${file.extension}");
+
+    final newFile = await saveFilePermanently(file);
+
     print("Path: ${file.path}");
+    print("New Path: ${newFile.path}");
   }
 
   Future openFile(PlatformFile? file) async {
     await OpenFile.open(file?.path!);
+  }
+
+  void openFiles(List<PlatformFile> files) async {
+    final filesPage = FilesPage(
+      files: files,
+      onOpenFile: openFile,
+    );
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => filesPage),
+    );
+  }
+
+  Future<File> saveFilePermanently(PlatformFile? file) async {
+    final appStorage = await getApplicationDocumentsDirectory();
+    final newFile = File('${appStorage.path}/${file?.name}');
+
+    return File(file!.path!).copy(newFile.path);
   }
 
   @override
@@ -168,63 +196,61 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You can use this app to print stuff asap.',
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 14,
               ),
             ),
             const Text(
               'To get started, select a file that you want to print.',
               style: TextStyle(
-                fontSize: 15,
-              ),
-            ),
-            const Text(
-              'Then, notify/chat with the Dorm Copy Manager to schedule delivery.',
-              style: TextStyle(
-                fontSize: 15,
-              ),
-            ),
-            const Text(
-              '(notification via WhatsApp)',
-              style: TextStyle(
-                fontSize: 10,
+                fontSize: 14,
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(18.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  launchWhatsApp();
-                },
-                child: const Text('Notify 📲'),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
-                  onPrimary: Colors.white,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
+              child: Column(
+                children: [
+                  const Text(
+                    'Then, notify/chat with the Dorm Copy Manager to schedule the delivery.',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                    // center the text
+                    textAlign: TextAlign.center,
                   ),
-                ),
+                  Padding(
+                    // padding Left and Right 0, Top 10, Bottom 0
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        launchWhatsApp();
+                      },
+                      child: const Text('Notify 📲'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                        onPrimary: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Text(
+                    '(notification via WhatsApp)',
+                    style: TextStyle(
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          final result = await FilePicker.platform.pickFiles();
-          if (result != null) return;
-
-          // Open the single file
-          final file = result?.files.first;
-          // openFile(file);
-
-          print("Name: ${file!.name}");
-          print("Size: ${file.size}");
-          print("Extension: ${file.extension}");
-          print("Path: ${file.path}");
-        },
+        onPressed: selectFile,
         tooltip: 'Select File',
         icon: const Icon(Icons.upload_rounded),
-        label: const Text('Select File'),
+        label: const Text('Select File(s)'),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
